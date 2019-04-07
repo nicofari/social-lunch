@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "express": "^4.16.4",
-    "airtable": "^0.5.10"
+    "airtable": "^0.5.10",
+    "pug": "^2.0.3"
   },
   "engines": {
     "node": "8.x"

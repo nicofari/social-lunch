@@ -12,6 +12,7 @@ Airtable.configure({
 */
 app.use(express.json())
 app.use(express.static('public'))
+app.set('view engine', 'pug')
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
@@ -34,6 +35,31 @@ app.post('/form', (req, res) => {
     console.log(record.getId())
   })
   res.status(200).type('json').end()
+})
+
+const getNames = async () => {
+  base('Subscriptions').select({
+      maxRecords: 56,
+      view: "Grid view"
+  }).eachPage(function page(records, fetchNextPage) {
+      // This function (`page`) will get called for each page of records.
+
+      records.forEach(function(record) {
+          console.log('Retrieved', record.get('Name'));
+      });
+
+      // To fetch the next page of records, call `fetchNextPage`.
+      // If there are more records, `page` will get called again.
+      // If there are no more records, `done` will get called.
+      fetchNextPage();
+
+  }, function done(err) {
+      if (err) { console.error(err); return; }
+  })  
+}
+
+app.get('/list', (req, res) => {
+  
 })
 
 const listener = app.listen(process.env.PORT, () => {

@@ -5,6 +5,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json())
+
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
@@ -20,3 +22,10 @@ app.get('/', function(request, response) {
 const listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+app.post('/form', (req, res) => {
+  console.log(req.body.name)
+  console.log(req.body.email)
+
+  res.end()
+})

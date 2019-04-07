@@ -1,31 +1,40 @@
-// server.js
-// where your node app starts
+const express = require('express')
+const app = express()
 
-// init project
-const express = require('express');
-const app = express();
+const base = require('airtable').base(process.env.AIRTABLE_BASE_NAME)
+const table = base(process.env.AIRTABLE_TABLE_NAME)
+
+Airtable.configure({
+    apiKey: process.env.AIRTABLE_API_KEY
+})
 
 app.use(express.json())
+app.use(express.static('public'))
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
-
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
-
-// http://expressjs.com/en/starter/basic-routing.html
-app.get('/', function(request, response) {
-  response.sendFile(__dirname + '/views/index.html');
-});
-
-// listen for requests :)
-const listener = app.listen(process.env.PORT, function() {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/views/index.html')
+})
 
 app.post('/form', (req, res) => {
-  console.log(req.body.name)
-  console.log(req.body.date)
+  const name = req.body.name
+  const date = req.body.date
+  console.log(name)
+  console.log(date)
 
+    table.create({
+      "Name": name,
+      "Date": date
+    }, (err, record) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+
+    console.log(record.getId())
+  })
   res.status(200).type('json').end()
+})
+
+const listener = app.listen(process.env.PORT, () => {
+  console.log('Your app is listening on port ' + listener.address().port)
 })

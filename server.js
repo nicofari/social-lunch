@@ -25,7 +25,7 @@ const listener = app.listen(process.env.PORT, function() {
 
 app.post('/form', (req, res) => {
   console.log(req.body.name)
-  console.log(req.body.email)
+  console.log(req.body.date)
 
   res.end()
 })

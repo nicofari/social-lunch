@@ -27,5 +27,5 @@ app.post('/form', (req, res) => {
   console.log(req.body.name)
   console.log(req.body.date)
 
-  res.end()
+  res.status(200).type('json').end()
 })

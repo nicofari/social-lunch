@@ -2,13 +2,14 @@ const express = require('express')
 const app = express()
 const Airtable = require('airtable')
 
-const base = require('airtable').base(process.env.AIRTABLE_BASE_NAME)
-const table = base(process.env.AIRTABLE_TABLE_NAME)
-
+//const base = require('airtable').base(process.env.AIRTABLE_BASE_NAME)
+const base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appf7mrRY6a3xK8jT');
+//const table = base(process.env.AIRTABLE_TABLE_NAME)
+/*
 Airtable.configure({
     apiKey: process.env.AIRTABLE_API_KEY
 })
-
+*/
 app.use(express.json())
 app.use(express.static('public'))
 
@@ -22,15 +23,14 @@ app.post('/form', (req, res) => {
   console.log(name)
   console.log(date)
 
-    table.create({
-      "Name": name,
-      "Date": date
-    }, (err, record) => {
-      if (err) {
-        console.error(err)
-        return
-      }
-
+  base('Subscriptions').create({
+    "Name": name,
+    "Date": date
+  }, (err, record) => {
+    if (err) {
+      console.error(err)
+      return
+    }
     console.log(record.getId())
   })
   res.status(200).type('json').end()

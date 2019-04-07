@@ -19,9 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = document.querySelectorAll('form input[name="name"]')[0].value
     const date = document.querySelectorAll('form input[name="date"]')[0].value
     
-    axios.post('/form', {
+    axios.post('/form', [
       name,
       date
+    ], (req, res) => {
+      alert('Happy to see you, ' + name + '!')
     })    
   })
 })

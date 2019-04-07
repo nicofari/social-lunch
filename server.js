@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const Airtable = require('airtable')
 
 const base = require('airtable').base(process.env.AIRTABLE_BASE_NAME)
 const table = base(process.env.AIRTABLE_TABLE_NAME)

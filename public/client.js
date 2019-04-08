@@ -38,6 +38,5 @@ const getList = () => {
                                 headers: { Authorization: "Bearer "+'key1t0VRiFHd7Kuj8'} 
                             }).then(function (res) {
     console.log(res.data.records)
-    $("#result").html(res.data.records).fadeIn()
   })
 }

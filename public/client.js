@@ -20,7 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const date = document.querySelectorAll('form input[name="date"]')[0].value
     
     if (!name) {
-      
+      alert('Name is mandatory!');
+      return;
     }
     axios.post('/form', {
       name: name,
@@ -31,3 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
     })    
   })
 })
+
+const getList = () => {
+  axios.get('/list').then(function (res) {
+    console.log(res)
+  })
+}

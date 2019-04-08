@@ -58,12 +58,12 @@ const getNames = async () => {
   })  
 }
 
-app.get('/list', (req, res) => {
-  getNames().then(names => {
-      res.render(__dirname + '/views/admin.pug', { names: names })
+app.get('/list', async (req, res) => {
+  await getNames().then(names => {
+      res.render(__dirname + '/views/list.pug', { names: names })
       res.end()
   })
-  res.sendFile(__dirname + '/views/admin.pug') 
+  res.sendFile(__dirname + '/views/list.pug') 
 })
 
 const listener = app.listen(process.env.PORT, () => {

@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = document.querySelectorAll('form input[name="name"]')[0].value
     const date = document.querySelectorAll('form input[name="date"]')[0].value
     
+    if (!name) {
+      
+    }
     axios.post('/form', {
       name: name,
       date: date

@@ -34,7 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 const getList = () => {
-  axios.get('/list').then(function (res) {
+  axios.get('https://api.airtable.com/v0/appf7mrRY6a3xK8jT/Subscriptions?maxRecords=3&view=Grid%20view', { 
+                                headers: { Authorization: "Bearer "+'key1t0VRiFHd7Kuj8'} 
+                            }).then(function (res) {
     console.log(res)
   })
 }

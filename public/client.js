@@ -38,5 +38,13 @@ const getList = () => {
                                 headers: { Authorization: "Bearer "+'key1t0VRiFHd7Kuj8'} 
                             }).then(function (res) {
     console.log(res.data.records)
+    let container = document.getElementById('result_table')
+    for (let i=0; i < res.data.records.length; i++) {
+      let tr = document.createElement('tr')
+      let td = document.createElement('td')
+      td.appendChild(document.createTextNode(res.data.records[i].fields.Name))
+      tr.appendChild(td)
+      container.appendChild(tr)
+    }
   })
 }

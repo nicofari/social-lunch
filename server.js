@@ -38,9 +38,8 @@ app.post('/form', (req, res) => {
 })
 
 const getNames = async () => {
-  base('Subscriptions').select({
-      maxRecords: 56,
-      view: "Grid view"
+  await base('Subscriptions').select({
+      maxRecords: 56
   }).eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
 
@@ -60,10 +59,10 @@ const getNames = async () => {
 
 app.get('/list', async (req, res) => {
   await getNames().then(names => {
-      res.render(__dirname + '/views/list.pug', { names: names })
-      res.end()
+//      res.render(__dirname + '/views/list.pug', { names: names })
+    res.status(200).type('json').end(JSON.stringify(names))
   })
-  res.sendFile(__dirname + '/views/list.pug') 
+  //res.sendFile(__dirname + '/views/list.pug') 
 })
 
 const listener = app.listen(process.env.PORT, () => {

@@ -1,6 +1,18 @@
 // client-side js
 // run by the browser each time your view template is loaded
 
+const getInputField = (fieldname) => {
+  return document.querySelectorAll('form input[name="' + fieldname + '"]')[0]
+}
+
+const getDate = () => {
+  return getInputField('date')
+}
+
+const getName = () => {
+  return getInputField('name')
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   var now = new Date();
 
@@ -9,15 +21,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
   
-  const dateEl = document.querySelectorAll('form input[name="date"]')[0]
+  const dateEl = getDate() //document.querySelectorAll('form input[name="date"]')[0]
   dateEl.value = today
   
   document.querySelector('form').addEventListener('submit', (event) => {
     event.stopPropagation()
     event.preventDefault()
 
-    const name = document.querySelectorAll('form input[name="name"]')[0].value
-    const date = document.querySelectorAll('form input[name="date"]')[0].value
+    const name = getName().value // document.querySelectorAll('form input[name="name"]')[0].value
+    const date = getDate().value // document.querySelectorAll('form input[name="date"]')[0].value
     
     if (!name) {
       alert('Name is mandatory!');
@@ -42,7 +54,7 @@ const createTextCell = (text) => {
 }
 
 const getList = () => {
-  axios.get('https://api.airtable.com/v0/appf7mrRY6a3xK8jT/Subscriptions?maxRecords=3&view=Grid%20view', { 
+  axios.get('https://api.airtable.com/v0/appf7mrRY6a3xK8jT/Subscriptions?maxRecords=50&view=Grid%20view&filterByFormula=Date='+getDate().value, { 
         headers: { Authorization: "Bearer "+'key1t0VRiFHd7Kuj8'} 
     }).then(function (res) {
     console.log(res.data.records)

@@ -33,18 +33,32 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 })
 
+const createElement = (elem) => {
+  return document.createElement(elem)
+}
+
+const createTextCell = (text) => {
+  return document.createTextNode(text)
+}
+
 const getList = () => {
   axios.get('https://api.airtable.com/v0/appf7mrRY6a3xK8jT/Subscriptions?maxRecords=3&view=Grid%20view', { 
                                 headers: { Authorization: "Bearer "+'key1t0VRiFHd7Kuj8'} 
                             }).then(function (res) {
     console.log(res.data.records)
     let container = document.getElementById('result_table')
+    container.innerHTML = ""
     for (let i=0; i < res.data.records.length; i++) {
-      let tr = document.createElement('tr')
-      let td = document.createElement('td')
-      td.appendChild(document.createTextNode(res.data.records[i].fields.Name))
+      let tr = createElement('tr')
+      let td = createElement('td')
+      td.appendChild(createTextCell(res.data.records[i].fields.Name))
       tr.appendChild(td)
       container.appendChild(tr)
     }
+    let tr = createElement('tr')
+    let td = createElement('td')
+    td.appendChild(createTextCell('Total: ' + res.data.records.length))
+    tr.appendChild(td)
+    container.appendChild(tr)
   })
 }

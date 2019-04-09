@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const Airtable = require('airtable')
 
+const dotenv = require('dotenv')
+dotenv.config()
+
 //const base = require('airtable').base(process.env.AIRTABLE_BASE_NAME)
 const base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appf7mrRY6a3xK8jT');
 //const table = base(process.env.AIRTABLE_TABLE_NAME)
@@ -12,7 +15,6 @@ Airtable.configure({
 */
 app.use(express.json())
 app.use(express.static('public'))
-app.set('view engine', 'pug')
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')

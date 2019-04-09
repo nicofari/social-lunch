@@ -15,6 +15,11 @@ h1 {
   color: #373fff;
 }
 
+td {
+  font-style: italic;
+  color: #373fff;
+}
+
 .bold {
   font-weight: bold;
 }

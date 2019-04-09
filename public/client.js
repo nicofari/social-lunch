@@ -54,7 +54,8 @@ const createTextCell = (text) => {
 }
 
 const getList = () => {
-  axios.get('https://api.airtable.com/v0/appf7mrRY6a3xK8jT/Subscriptions?maxRecords=50&view=Grid%20view&filterByFormula=Date='+getDate().value, { 
+console.log(getDate().value)  
+  axios.get('https://api.airtable.com/v0/appf7mrRY6a3xK8jT/Subscriptions?maxRecords=50&view=Grid%20view&filterByFormula=Date=DATETIME_PARSE("'+getDate().value+'")', { 
         headers: { Authorization: "Bearer "+'key1t0VRiFHd7Kuj8'} 
     }).then(function (res) {
     console.log(res.data.records)

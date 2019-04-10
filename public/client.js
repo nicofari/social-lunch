@@ -13,24 +13,27 @@ const getName = () => {
   return getInputField('name')
 }
 
+const getToday = () => {
+  const now = new Date()
+
+  const day = ("0" + now.getDate()).slice(-2)
+  const month = ("0" + (now.getMonth() + 1)).slice(-2)
+
+  return now.getFullYear() + "-" + (month) + "-" + (day)
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  var now = new Date();
 
-  var day = ("0" + now.getDate()).slice(-2);
-  var month = ("0" + (now.getMonth() + 1)).slice(-2);
-
-  var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
-  
   const dateEl = getDate() //document.querySelectorAll('form input[name="date"]')[0]
-  dateEl.value = today
-  
+  dateEl.value = getToday()
+
   document.querySelector('form').addEventListener('submit', (event) => {
     event.stopPropagation()
     event.preventDefault()
 
     const name = getName().value // document.querySelectorAll('form input[name="name"]')[0].value
     const date = getDate().value // document.querySelectorAll('form input[name="date"]')[0].value
-    
+
     if (!name) {
       alert('Name is mandatory!');
       return;
@@ -41,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }).then(function (res) {
       console.log('after post')
       alert('Happy to see you, ' + name + '!')
-    })    
+    })
   })
 })
 
@@ -54,23 +57,27 @@ const createTextCell = (text) => {
 }
 
 const getList = () => {
-console.log(getDate().value)  
-  axios.get('https://api.airtable.com/v0/appf7mrRY6a3xK8jT/Subscriptions?maxRecords=50&view=Grid%20view&filterByFormula=Date=DATETIME_PARSE("'+getDate().value+'")', { 
-        headers: { Authorization: "Bearer "+'key1t0VRiFHd7Kuj8'} 
-    }).then(function (res) {
-    console.log(res.data.records)
+  const date = getDate().value
+  console.log(date)
+  axios.get('/list', {
+    params: {
+      date: date
+    }
+  }).then(function (res) {
+    console.log(res.data)
+    const len = res.data.length
     let container = document.getElementById('result_table')
     container.innerHTML = ""
-    for (let i=0; i < res.data.records.length; i++) {
+    for (let i = 0; i < len; i++) {
       let tr = createElement('tr')
       let td = createElement('td')
-      td.appendChild(createTextCell(res.data.records[i].fields.Name))
+      td.appendChild(createTextCell(res.data[i]))
       tr.appendChild(td)
       container.appendChild(tr)
     }
     let tr = createElement('tr')
     let td = createElement('td')
-    td.appendChild(createTextCell('Total: ' + res.data.records.length))
+    td.appendChild(createTextCell('Total: ' + len))
     tr.appendChild(td)
     container.appendChild(tr)
   })

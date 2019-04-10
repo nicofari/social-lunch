@@ -6,7 +6,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 //const base = require('airtable').base(process.env.AIRTABLE_BASE_NAME)
-const base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appf7mrRY6a3xK8jT');
+const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base('appf7mrRY6a3xK8jT');
 //const table = base(process.env.AIRTABLE_TABLE_NAME)
 /*
 Airtable.configure({
@@ -39,33 +39,43 @@ app.post('/form', (req, res) => {
   res.status(200).type('json').end()
 })
 
-const getNames = async () => {
-  await base('Subscriptions').select({
-      maxRecords: 56
-  }).eachPage(function page(records, fetchNextPage) {
-      // This function (`page`) will get called for each page of records.
-
-      records.forEach(function(record) {
-          console.log('Retrieved', record.get('Name'));
-      });
-
-      // To fetch the next page of records, call `fetchNextPage`.
-      // If there are more records, `page` will get called again.
-      // If there are no more records, `done` will get called.
-      fetchNextPage();
-
-  }, function done(err) {
-      if (err) { console.error(err); return; }
-  })  
+const getNames = (date) => {
+  return new Promise((resolve, reject) => {
+    base('Subscriptions').select({
+      maxRecords: 56,
+      filterByFormula: 'Date=DATETIME_PARSE("' + date + '")'
+    }).firstPage((err, records) => {
+      if (err) {
+        reject(err)
+        return
+      }
+      resolve(records)
+    })
+  })
 }
 
-app.get('/list', async (req, res) => {
-  await getNames().then(names => {
-//      res.render(__dirname + '/views/list.pug', { names: names })
-    res.status(200).type('json').end(JSON.stringify(names))
+app.get('/list', (req, res) => {
+  const ret = []
+  const date = req.query.date
+  console.log('date = ' + date)
+  getNames(date).then(records => {
+    records.forEach(record => {
+      const name = record.get('Name')
+      console.log(name)
+      ret.push(name)
+    })
+    console.log('return names')
+    res.status(200).type('json').end(JSON.stringify(ret))
+  }).catch(err => {
+    console.log(err)
   })
-  //res.sendFile(__dirname + '/views/list.pug') 
+
 })
+/*
+console.log('return names')
+res.status(200).type('json').end(JSON.stringify(names))  
+*/
+//res.sendFile(__dirname + '/views/list.pug') 
 
 const listener = app.listen(process.env.PORT, () => {
   console.log('Your app is listening on port ' + listener.address().port)

@@ -9,50 +9,69 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Welcome to lunch!</title>
-    <meta name="description" content="A simple tool to collect daily lunch subscriptions">
-    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    
-    <!-- import the webpage's client-side javascript file -->
-    <script src="/client.js" defer></script>
-  </head>
-  <body>
-    <header>
-      <h1>
-        Join us for a lunch!
-      </h1>
-    </header>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to lunch!</title>
+  <meta name="description" content="gpi fontevivo parma social lunch">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Social Lunch">
+  <meta property="og:description" content="gpi fontevivo parma social lunch">
+  <meta property="og:image" content="">
+  <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
 
-    <main>
-      <form>
-        Lunch date <input type="date" name="date" required>
-        Name <input name="name" placeholder="Name" required/>
-        <input type="submit" value="I will be there">
-         <input type="button" onclick="getList()" value="See the list"> 
-      </form>
+  <!-- import the webpage's stylesheet -->
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    </main>
-    <div id="result_div">
-      <table id="result_table">
-        
-      </table>
-    </div>
-    <footer>
-      Authored by <a href = "https://www.linkedin.com/in/nicofarina/">nicofari</a>
-    </footer>
+  <!-- import the webpage's client-side javascript file -->
+  <script src="/client.js" defer></script>
 
-    <!-- include the Glitch button to show what the webpage is about and
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127349972-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-127349972-2');
+  </script>
+
+</head>
+
+<body>
+  <header>
+    <h1>
+      Join us for a lunch!
+    </h1>
+  </header>
+
+  <main>
+    <form>
+      Lunch date <input type="date" name="date" required>
+      Name <input name="name" placeholder="Name" required />
+      <input type="submit" value="I will be there">
+      <input type="button" onclick="getList()" value="See the list">
+    </form>
+
+  </main>
+  <div id="result_div">
+    <table id="result_table">
+
+    </table>
+  </div>
+  <footer>
+    No cookies of <u>any</u> kind! <br>
+    Social lunch 1.0.0 by <a href="https://www.linkedin.com/in/nicofarina/">nicofari</a>
+  </footer>
+
+  <!-- include the Glitch button to show what the webpage is about and
           to make it easier for folks to view source and remix -->
-    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
-    <script src="https://button.glitch.me/button.js"></script>
+  <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+  <script src="https://button.glitch.me/button.js"></script>
 
-  </body>
+</body>
+
 </html>

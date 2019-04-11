@@ -8,11 +8,7 @@ dotenv.config()
 //const base = require('airtable').base(process.env.AIRTABLE_BASE_NAME)
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base('appf7mrRY6a3xK8jT');
 //const table = base(process.env.AIRTABLE_TABLE_NAME)
-/*
-Airtable.configure({
-    apiKey: process.env.AIRTABLE_API_KEY
-})
-*/
+
 app.use(express.json())
 app.use(express.static('public'))
 
@@ -20,23 +16,47 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 })
 
+const findByName = (name, date) => {
+  return new Promise((resolve, reject) => {
+    const formula = "AND({Name}='"+ name + "',{Date}=DATETIME_PARSE('" + date +"'))"
+    console.log(formula)
+    base('Subscriptions').select({
+      maxRecords: 56,
+      filterByFormula: formula
+    }).firstPage((err, records) => {
+      if (err) {
+        console.log(err)
+        reject(err)
+        return
+      }
+      resolve(records.length)
+    })
+  })
+}
+
 app.post('/form', (req, res) => {
   const name = req.body.name
   const date = req.body.date
   console.log(name)
   console.log(date)
 
-  base('Subscriptions').create({
-    "Name": name,
-    "Date": date
-  }, (err, record) => {
-    if (err) {
-      console.error(err)
-      return
+  findByName(name, date).then(count => {
+    if (count > 0) {
+      res.status(200).type('json').send({ errorMsg: name + ' you are already in, thanks!'})
+    } else {
+      base('Subscriptions').create({
+        "Name": name,
+        "Date": date
+      }, (err, record) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        console.log(record.getId())
+      })
+      res.status(200).type('json').end()
     }
-    console.log(record.getId())
   })
-  res.status(200).type('json').end()
 })
 
 const getNames = (date) => {
@@ -71,11 +91,6 @@ app.get('/list', (req, res) => {
   })
 
 })
-/*
-console.log('return names')
-res.status(200).type('json').end(JSON.stringify(names))  
-*/
-//res.sendFile(__dirname + '/views/list.pug') 
 
 const listener = app.listen(process.env.PORT, () => {
   console.log('Your app is listening on port ' + listener.address().port)

@@ -1,5 +1,3 @@
-// client-side js
-// run by the browser each time your view template is loaded
 
 const getInputField = (fieldname) => {
   return document.querySelectorAll('form input[name="' + fieldname + '"]')[0]
@@ -24,15 +22,15 @@ const getToday = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const dateEl = getDate() //document.querySelectorAll('form input[name="date"]')[0]
+  const dateEl = getDate() 
   dateEl.value = getToday()
 
   document.querySelector('form').addEventListener('submit', (event) => {
     event.stopPropagation()
     event.preventDefault()
 
-    const name = getName().value // document.querySelectorAll('form input[name="name"]')[0].value
-    const date = getDate().value // document.querySelectorAll('form input[name="date"]')[0].value
+    const name = getName().value 
+    const date = getDate().value 
 
     if (!name) {
       alert('Name is mandatory!');
@@ -42,8 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
       name: name,
       date: date
     }).then(function (res) {
-      console.log('after post')
-      alert('Happy to see you, ' + name + '!')
+      const errorMsg = res.data.errorMsg
+      if (errorMsg) {
+        alert(errorMsg)
+      } else {
+        alert('Happy to see you, ' + name + '!')
+      }
     })
   })
 })

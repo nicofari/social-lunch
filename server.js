@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 const findByName = (name, date) => {
   return new Promise((resolve, reject) => {
-    const formula = "AND({Name}='"+ name + "',{Date}=DATETIME_PARSE('" + date +"'))"
+    const formula = "AND(UPPER({Name})=UPPER('"+ name + "'),{Date}=DATETIME_PARSE('" + date +"'))"
     console.log(formula)
     base('Subscriptions').select({
       maxRecords: 56,

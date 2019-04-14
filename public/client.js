@@ -22,18 +22,18 @@ const getToday = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const dateEl = getDate() 
+  const dateEl = getDate()
   dateEl.value = getToday()
 
   document.querySelector('form').addEventListener('submit', (event) => {
     event.stopPropagation()
     event.preventDefault()
 
-    const name = getName().value 
-    const date = getDate().value 
+    const name = getName().value
+    const date = getDate().value
 
     if (!name) {
-      alert('Name is mandatory!');
+      alert('Il nome è obbligatorio!');
       return;
     }
     axios.post('/form', {
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (errorMsg) {
         alert(errorMsg)
       } else {
-        alert('Happy to see you, ' + name + '!')
+        alert('Felice di vederti ' + name + '!')
       }
     })
   })
@@ -52,13 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const getList = () => {
   const date = getDate().value
-  console.log(date)
   axios.get('/list', {
     params: {
       date: date
     }
   }).then(function (res) {
-    console.log(res.data)
     const len = res.data.length
     let container = document.getElementById('result_table')
     container.innerHTML = ""
@@ -71,7 +69,7 @@ const getList = () => {
     }
     let tr = createElement('tr')
     let td = createElement('td')
-    td.appendChild(createTextCell('Total: ' + len))
+    td.appendChild(createTextCell('Totale: ' + len))
     tr.appendChild(td)
     container.appendChild(tr)
   })
@@ -86,8 +84,8 @@ const createTextCell = (text) => {
 }
 
 const deleteMe = () => {
-  const name = getName().value 
-  const date = getDate().value 
+  const name = getName().value
+  const date = getDate().value
 
   axios.post('/deleteme', {
     name: name,
@@ -97,7 +95,7 @@ const deleteMe = () => {
     if (errorMsg) {
       alert(errorMsg)
     } else {
-      alert('We will miss you ' + name + '!')
+      alert('Ci mancherai ' + name + '!')
     }
   })
 

@@ -5,9 +5,7 @@ const Airtable = require('airtable')
 const dotenv = require('dotenv')
 dotenv.config()
 
-//const base = require('airtable').base(process.env.AIRTABLE_BASE_NAME)
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base('appf7mrRY6a3xK8jT');
-//const table = base(process.env.AIRTABLE_TABLE_NAME)
+const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_NAME);
 
 app.use(express.json())
 app.use(express.static('public'))
@@ -42,7 +40,7 @@ app.post('/form', (req, res) => {
 
   findByName(name, date).then(records => {
     if (records.length > 0) {
-      res.status(200).type('json').send({ errorMsg: name + ' you are already in, thanks!'})
+      res.status(200).type('json').send({ errorMsg: name + ' sei già in lista grazie!'})
     } else {
       base('Subscriptions').create({
         "Name": name,
@@ -67,7 +65,7 @@ app.post('/deleteme', (req, res) => {
 
   findByName(name, date).then(records => {
     if (records.length === 0) {
-      res.status(200).type('json').send({ errorMsg: name + ' you are not in list!'})
+      res.status(200).type('json').send({ errorMsg: name + ' non sei nella lista!'})
     } else {
       const id = records[0].getId()
       base('Subscriptions').destroy(id, (err, record) => {

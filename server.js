@@ -29,7 +29,7 @@ const findByName = (name, date) => {
         reject(err)
         return
       }
-      resolve(records.length)
+      resolve(records)
     })
   })
 }
@@ -40,8 +40,8 @@ app.post('/form', (req, res) => {
   console.log(name)
   console.log(date)
 
-  findByName(name, date).then(count => {
-    if (count > 0) {
+  findByName(name, date).then(records => {
+    if (records.length > 0) {
       res.status(200).type('json').send({ errorMsg: name + ' you are already in, thanks!'})
     } else {
       base('Subscriptions').create({
@@ -53,6 +53,28 @@ app.post('/form', (req, res) => {
           return
         }
         console.log(record.getId())
+      })
+      res.status(200).type('json').end()
+    }
+  })
+})
+
+app.post('/deleteme', (req, res) => {
+  const name = req.body.name
+  const date = req.body.date
+  console.log(name)
+  console.log(date)
+
+  findByName(name, date).then(records => {
+    if (records.length === 0) {
+      res.status(200).type('json').send({ errorMsg: name + ' you are not in list!'})
+    } else {
+      const id = records[0].getId()
+      base('Subscriptions').destroy(id, (err, record) => {
+        if (err) {
+          console.error(err)
+          return
+        }
       })
       res.status(200).type('json').end()
     }

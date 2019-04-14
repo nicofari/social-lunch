@@ -50,14 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 })
 
-const createElement = (elem) => {
-  return document.createElement(elem)
-}
-
-const createTextCell = (text) => {
-  return document.createTextNode(text)
-}
-
 const getList = () => {
   const date = getDate().value
   console.log(date)
@@ -83,4 +75,30 @@ const getList = () => {
     tr.appendChild(td)
     container.appendChild(tr)
   })
+}
+
+const createElement = (elem) => {
+  return document.createElement(elem)
+}
+
+const createTextCell = (text) => {
+  return document.createTextNode(text)
+}
+
+const deleteMe = () => {
+  const name = getName().value 
+  const date = getDate().value 
+
+  axios.post('/deleteme', {
+    name: name,
+    date: date
+  }).then(function (res) {
+    const errorMsg = res.data.errorMsg
+    if (errorMsg) {
+      alert(errorMsg)
+    } else {
+      alert('We will miss you ' + name + '!')
+    }
+  })
+
 }

@@ -25,16 +25,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const dateEl = getDate()
   dateEl.value = getToday()
 
+  if (localStorage.username) {
+    getName().value = localStorage.username
+  }
+
   document.querySelector('form').addEventListener('submit', (event) => {
     event.stopPropagation()
     event.preventDefault()
 
     const name = getName().value
     const date = getDate().value
+    const rememberMe = getRememberMe().value
 
     if (!name) {
       alert('Il nome è obbligatorio!');
       return;
+    }
+    if (rememberMe) {
+      localStorage.username = name
     }
     axios.post('/form', {
       name: name,
@@ -49,6 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 })
+
+const getRememberMe = () => {
+  return getInputField('rememberMe')
+}
 
 const getList = () => {
   const date = getDate().value

@@ -38,11 +38,20 @@ form {
   border-radius: 3px;
 }
 
-input {
+input:not([type=checkbox]) {
   display: block;
   margin-bottom: 10px;
   padding: 5px;
   width: 100%;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+input[type=checkbox] {
+  display: block;
+  margin-bottom: 10px;
+  padding: 5px;
   border: 1px solid lightgrey;
   border-radius: 3px;
   font-size: 16px;

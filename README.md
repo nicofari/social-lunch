@@ -2,7 +2,7 @@ Social Lunch
 ============
 
 This is a very simple webapp to help my collegues and me organize our lunch at a nearby restaurant.
-I've created it initially in **Glitch** ([about Glitch](https://glitch.com/about).
+I've created it initially in **Glitch** ([about Glitch](https://glitch.com/about)).
 Then I moved it to github.
 
 Purpose

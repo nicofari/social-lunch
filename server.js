@@ -139,6 +139,7 @@ app.post('/upload_menu', (req, res) => {
       console.log("** File Upload (Promise)")
       console.log("* " + image.public_id)
       console.log("* " + image.url)
+      updateMenuLink(image.url)
     })
       .catch((err) => {
         console.log()
@@ -146,9 +147,22 @@ app.post('/upload_menu', (req, res) => {
         if (err) { console.warn(err) }
       })
   })
-
   res.status(200).type('json').send({ success: true })
 })
+
+const updateMenuLink = (publicUrl) => {
+  const baseMenu = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appyq1OHZ2pZW8OJc');
+  baseMenu('Menu').update('reccH5j0hGb0B57YP', {
+    "link": publicUrl,
+    "changed_at": new Date().toISOString()
+  }, function (err, record) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    console.log(record.get('id') + ' updated')
+  });
+}
 
 const listener = app.listen(process.env.PORT, () => {
   console.log('Your app is listening on port ' + listener.address().port)

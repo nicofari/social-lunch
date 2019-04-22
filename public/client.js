@@ -20,6 +20,17 @@ const getToday = () => {
   return now.getFullYear() + "-" + (month) + "-" + (day)
 }
 
+const uploadMenu = () => {
+  var formData = new FormData();
+  var imagefile = document.querySelector('#menu_file');
+  formData.append("image", imagefile.files[0]);
+  axios.post('upload_menu', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+  })
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const dateEl = getDate()
@@ -29,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     getName().value = localStorage.username
   }
 
-  document.querySelector('form').addEventListener('submit', (event) => {
+  document.querySelector('#name_form').addEventListener('submit', (event) => {
     event.stopPropagation()
     event.preventDefault()
 

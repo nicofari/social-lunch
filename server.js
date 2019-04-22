@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express()
 const Airtable = require('airtable')
-
+const formidable = require('formidable')
 const dotenv = require('dotenv')
+
 dotenv.config()
 
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_NAME);
@@ -110,6 +111,22 @@ app.get('/list', (req, res) => {
     console.log(err)
   })
 
+})
+
+app.post('/upload_menu', (req, res) => {
+  const form = new formidable.IncomingForm()
+  
+  form.parse(req)
+  
+  form.on('fileBegin', (name, file) => {
+    file.path = __dirname + '/' + file.name
+  })
+
+  form.on('file', (name, file) => {
+    console.log('uploaded: ' + file.name)
+  })
+  
+  res.status(200).type('json').send({ success: true})
 })
 
 const listener = app.listen(process.env.PORT, () => {

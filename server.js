@@ -3,6 +3,7 @@ const app = express()
 const Airtable = require('airtable')
 const formidable = require('formidable')
 const dotenv = require('dotenv')
+const cloudinary = require('cloudinary').v2
 
 dotenv.config()
 
@@ -17,7 +18,7 @@ app.get('/', (req, res) => {
 
 const findByName = (name, date) => {
   return new Promise((resolve, reject) => {
-    const formula = "AND(UPPER({Name})=UPPER('"+ name + "'),{Date}=DATETIME_PARSE('" + date +"'))"
+    const formula = "AND(UPPER({Name})=UPPER('" + name + "'),{Date}=DATETIME_PARSE('" + date + "'))"
     console.log(formula)
     base('Subscriptions').select({
       maxRecords: 56,
@@ -41,7 +42,7 @@ app.post('/form', (req, res) => {
 
   findByName(name, date).then(records => {
     if (records.length > 0) {
-      res.status(200).type('json').send({ errorMsg: name + ' sei già in lista grazie!'})
+      res.status(200).type('json').send({ errorMsg: name + ' sei già in lista grazie!' })
     } else {
       base('Subscriptions').create({
         "Name": name,
@@ -66,7 +67,7 @@ app.post('/deleteme', (req, res) => {
 
   findByName(name, date).then(records => {
     if (records.length === 0) {
-      res.status(200).type('json').send({ errorMsg: name + ' non sei nella lista!'})
+      res.status(200).type('json').send({ errorMsg: name + ' non sei nella lista!' })
     } else {
       const id = records[0].getId()
       base('Subscriptions').destroy(id, (err, record) => {
@@ -115,18 +116,38 @@ app.get('/list', (req, res) => {
 
 app.post('/upload_menu', (req, res) => {
   const form = new formidable.IncomingForm()
-  
+
   form.parse(req)
-  
+
   form.on('fileBegin', (name, file) => {
     file.path = __dirname + '/' + file.name
   })
 
   form.on('file', (name, file) => {
     console.log('uploaded: ' + file.name)
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET
+    })
+
+    cloudinary.uploader.upload(file.name, {
+      tags: 'social_lunch_menu',
+      public_id: 'social_lunch_menu'
+    }).then((image) => {
+      console.log();
+      console.log("** File Upload (Promise)")
+      console.log("* " + image.public_id)
+      console.log("* " + image.url)
+    })
+      .catch((err) => {
+        console.log()
+        console.log("** File Upload (Promise)")
+        if (err) { console.warn(err) }
+      })
   })
-  
-  res.status(200).type('json').send({ success: true})
+
+  res.status(200).type('json').send({ success: true })
 })
 
 const listener = app.listen(process.env.PORT, () => {

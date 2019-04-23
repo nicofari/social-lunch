@@ -38,16 +38,18 @@ const findByName = (name, date) => {
 app.post('/form', (req, res) => {
   const name = req.body.name
   const date = req.body.date
+  const course = req.body.course
+
   console.log(name)
   console.log(date)
+  console.log(course)
 
   findByName(name, date).then(records => {
     if (records.length > 0) {
-      res.status(200).type('json').send({ errorMsg: name + ' sei già in lista grazie!' })
-    } else {
-      base('Subscriptions').create({
-        "Name": name,
-        "Date": date
+      const id = records[0].getId()
+      console.log('already present id = ' + id)
+      base('Subscriptions').update(id, {
+        "Course": course
       }, (err, record) => {
         if (err) {
           console.error(err)
@@ -55,8 +57,20 @@ app.post('/form', (req, res) => {
         }
         console.log(record.getId())
       })
-      res.status(200).type('json').end()
+    } else {
+      base('Subscriptions').create({
+        "Name": name,
+        "Date": date,
+        "Course": course
+      }, (err, record) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        console.log(record.getId())
+      })
     }
+    res.status(200).type('json').end()
   })
 })
 
@@ -104,8 +118,9 @@ app.get('/list', (req, res) => {
   getNames(date).then(records => {
     records.forEach(record => {
       const name = record.get('Name')
+      const course = record.get('Course')
       console.log(name)
-      ret.push(name)
+      ret.push({ name: name, course: course })
     })
     console.log('return names')
     res.status(200).type('json').end(JSON.stringify(ret))

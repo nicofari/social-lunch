@@ -11,6 +11,10 @@ const getName = () => {
   return getInputField('name')
 }
 
+const getCourse = () => {
+  return getInputField('courseChoice')
+}
+
 const getToday = () => {
   const now = new Date()
 
@@ -50,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const name = getName().value
     const date = getDate().value
+    const course = getCourse().value
     const rememberMe = getRememberMe().value
 
     if (!name) {
@@ -62,7 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     axios.post('/form', {
       name: name,
-      date: date
+      date: date,
+      course: course
     }).then(function (res) {
       const errorMsg = res.data.errorMsg
       if (errorMsg) {
@@ -106,11 +112,24 @@ const getList = () => {
     const len = res.data.length
     let container = document.getElementById('result_table')
     container.innerHTML = ""
+    let trh = getTableRow()
+    let tdh1 = getTableCell()
+    tdh1.appendChild(createTextCell('Nome'))
+    trh.appendChild(tdh1)
+    let tdh2 = getTableCell()
+    tdh2.appendChild(createTextCell('Piatto scelto'))
+    trh.appendChild(tdh2)
+    container.appendChild(trh)
     for (let i = 0; i < len; i++) {
+      const name = res.data[i].name
+      const course = res.data[i].course || '<nessuna scelta>'
       let tr = createElement('tr')
       let td = createElement('td')
-      td.appendChild(createTextCell(res.data[i]))
+      td.appendChild(createTextCell(name))
+      let tdCourse = createElement('td')
       tr.appendChild(td)
+      tdCourse.appendChild(createTextCell(course))
+      tr.appendChild(tdCourse)
       container.appendChild(tr)
     }
     let tr = createElement('tr')
@@ -119,6 +138,14 @@ const getList = () => {
     tr.appendChild(td)
     container.appendChild(tr)
   })
+}
+
+const getTableRow = () => {
+  return createElement('tr')
+}
+
+const getTableCell = () => {
+  return createElement('td')
 }
 
 const createElement = (elem) => {

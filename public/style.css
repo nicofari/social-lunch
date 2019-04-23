@@ -18,6 +18,15 @@ h1 {
 td {
   font-style: italic;
   color: #373fff;
+  padding: 3px;
+	border-width: 1px;
+	border-style: solid;  
+}
+
+table {
+  border-width: 1px;
+  border-style: solid;
+  border-collapse: collapse;
 }
 
 .bold {

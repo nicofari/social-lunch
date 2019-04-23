@@ -8,6 +8,7 @@ const cloudinary = require('cloudinary').v2
 dotenv.config()
 
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_NAME);
+const baseMenu = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_MENU);
 
 app.use(express.json())
 app.use(express.static('public'))
@@ -150,9 +151,19 @@ app.post('/upload_menu', (req, res) => {
   res.status(200).type('json').send({ success: true })
 })
 
+app.get('/download_info', (req, res) => {
+  baseMenu('Menu').find(process.env.AIRTABLE_MENU_RECORD_ID, (err, record) => {
+    if (err) { 
+      console.error(err)
+      return
+    }
+    const changedAt = new Date(record.get('changed_at'))
+    res.status(200).type('json').send({ link: record.get('link'), changed_at: changedAt.toLocaleString() })
+  })
+})
+
 const updateMenuLink = (publicUrl) => {
-  const baseMenu = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appyq1OHZ2pZW8OJc');
-  baseMenu('Menu').update('reccH5j0hGb0B57YP', {
+  baseMenu('Menu').update(process.env.AIRTABLE_MENU_RECORD_ID, {
     "link": publicUrl,
     "changed_at": new Date().toISOString()
   }, function (err, record) {

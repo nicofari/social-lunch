@@ -28,6 +28,8 @@ const uploadMenu = () => {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
+  }).then(res => {
+    alert('Upload completato!')
   })
 }
 
@@ -39,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.username) {
     getName().value = localStorage.username
   }
+  
+  setDownloadLink()
 
   document.querySelector('#name_form').addEventListener('submit', (event) => {
     event.stopPropagation()
@@ -55,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (rememberMe) {
       localStorage.username = name
     }
+
     axios.post('/form', {
       name: name,
       date: date
@@ -68,6 +73,24 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 })
+
+const setDownloadLink = () => {
+  axios.get('/download_info').then( res => {
+    const data = res.data
+    let downloadEl = getElement('download_menu')
+    let a = document.createElement('a')
+    const linkText = document.createTextNode('Scarica il menù del ' + data.changed_at)
+    a.appendChild(linkText)
+    a.title = 'Scarica il menù'
+    a.href = data.link
+    a.setAttribute('target', '_blank')
+    downloadEl.appendChild(a)
+  })
+}
+
+const getElement = (id) => {
+  return document.getElementById(id)
+}
 
 const getRememberMe = () => {
   return getInputField('rememberMe')

@@ -35,24 +35,29 @@
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'UA-127349972-2');
   </script>
 </head>
 
 <body>
   <header>
-    <h1>Vieni a pranzo con noi</h1>
+    <h1>Vieni a pranzo?</h1>
   </header>
 
   <main>
-    <form>
+    <form method="POST" id="name_form">
       Data<input type="date" name="date" required>
       Nome<input name="name" placeholder="Nome" required />
-      <input name="rememberMe" type="checkbox" style="display: inline-block;" /><label for="rememberMe">Ricordami su questo dispositivo</label>
+      <input name="rememberMe" type="checkbox" style="display: inline-block;" />
+      <label for="rememberMe">Ricordami su questo dispositivo</label> 
+      <label for="courseChoice" style="display: block;">Piatto scelto</label>
+      <input name="courseChoice" />
       <input type="submit" value="Vengo anch'io!">
       <input type="button" onclick="deleteMe()" value="Cancellami">
       <input type="button" onclick="getList()" value="Mostra la lista">
+      <input type="file" name="menu_file" id="menu_file" />
+      <input type="button" onclick="uploadMenu()" value="Invia menù">
+      <span id="download_menu"></span>
     </form>
 
   </main>

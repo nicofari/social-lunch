@@ -11,6 +11,10 @@ const getName = () => {
   return getInputField('name')
 }
 
+const getCourse = () => {
+  return getInputField('courseChoice')
+}
+
 const getToday = () => {
   const now = new Date()
 
@@ -18,6 +22,19 @@ const getToday = () => {
   const month = ("0" + (now.getMonth() + 1)).slice(-2)
 
   return now.getFullYear() + "-" + (month) + "-" + (day)
+}
+
+const uploadMenu = () => {
+  var formData = new FormData();
+  var imagefile = document.querySelector('#menu_file');
+  formData.append("image", imagefile.files[0]);
+  axios.post('upload_menu', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+  }).then(res => {
+    alert('Upload completato!')
+  })
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -28,13 +45,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.username) {
     getName().value = localStorage.username
   }
+  
+  setDownloadLink()
 
-  document.querySelector('form').addEventListener('submit', (event) => {
+  document.querySelector('#name_form').addEventListener('submit', (event) => {
     event.stopPropagation()
     event.preventDefault()
 
     const name = getName().value
     const date = getDate().value
+    const course = getCourse().value
     const rememberMe = getRememberMe().value
 
     if (!name) {
@@ -44,9 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (rememberMe) {
       localStorage.username = name
     }
+
     axios.post('/form', {
       name: name,
-      date: date
+      date: date,
+      course: course
     }).then(function (res) {
       const errorMsg = res.data.errorMsg
       if (errorMsg) {
@@ -57,6 +79,24 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 })
+
+const setDownloadLink = () => {
+  axios.get('/download_info').then( res => {
+    const data = res.data
+    let downloadEl = getElement('download_menu')
+    let a = document.createElement('a')
+    const linkText = document.createTextNode('Scarica il menù del ' + data.changed_at)
+    a.appendChild(linkText)
+    a.title = 'Scarica il menù'
+    a.href = data.link
+    a.setAttribute('target', '_blank')
+    downloadEl.appendChild(a)
+  })
+}
+
+const getElement = (id) => {
+  return document.getElementById(id)
+}
 
 const getRememberMe = () => {
   return getInputField('rememberMe')
@@ -72,11 +112,24 @@ const getList = () => {
     const len = res.data.length
     let container = document.getElementById('result_table')
     container.innerHTML = ""
+    let trh = getTableRow()
+    let tdh1 = getTableCell()
+    tdh1.appendChild(createTextCell('Nome'))
+    trh.appendChild(tdh1)
+    let tdh2 = getTableCell()
+    tdh2.appendChild(createTextCell('Piatto scelto'))
+    trh.appendChild(tdh2)
+    container.appendChild(trh)
     for (let i = 0; i < len; i++) {
+      const name = res.data[i].name
+      const course = res.data[i].course || '<nessuna scelta>'
       let tr = createElement('tr')
       let td = createElement('td')
-      td.appendChild(createTextCell(res.data[i]))
+      td.appendChild(createTextCell(name))
+      let tdCourse = createElement('td')
       tr.appendChild(td)
+      tdCourse.appendChild(createTextCell(course))
+      tr.appendChild(tdCourse)
       container.appendChild(tr)
     }
     let tr = createElement('tr')
@@ -85,6 +138,14 @@ const getList = () => {
     tr.appendChild(td)
     container.appendChild(tr)
   })
+}
+
+const getTableRow = () => {
+  return createElement('tr')
+}
+
+const getTableCell = () => {
+  return createElement('td')
 }
 
 const createElement = (elem) => {

@@ -137,6 +137,7 @@ app.post('/upload_menu', (req, res) => {
 
   form.on('fileBegin', (name, file) => {
     file.path = __dirname + '/' + file.name
+    console.log('fileBegin: file.path = ' + file.path)
   })
 
   form.on('file', (name, file) => {
@@ -155,15 +156,16 @@ app.post('/upload_menu', (req, res) => {
       console.log("** File Upload (Promise)")
       console.log("* " + image.public_id)
       console.log("* " + image.url)
-      updateMenuLink(image.url)
+      updateMenuLink(image.url, req, res)
     })
       .catch((err) => {
         console.log()
         console.log("** File Upload (Promise)")
         if (err) { console.warn(err) }
+        res.status(401).type('json').send({ success: false, errorMsg: err })
       })
   })
-  res.status(200).type('json').send({ success: true })
+  
 })
 
 app.get('/download_info', (req, res) => {
@@ -177,16 +179,18 @@ app.get('/download_info', (req, res) => {
   })
 })
 
-const updateMenuLink = (publicUrl) => {
+const updateMenuLink = (publicUrl, req, res) => {
   baseMenu('Menu').update(process.env.AIRTABLE_MENU_RECORD_ID, {
     "link": publicUrl,
     "changed_at": new Date().toISOString()
   }, function (err, record) {
     if (err) {
       console.error(err)
+      res.status(401).type('json').send({ success: false, errorMsg: err })
       return
     }
     console.log(record.get('id') + ' updated')
+    res.status(200).type('json').send({ success: true })
   });
 }
 

@@ -34,6 +34,8 @@ const uploadMenu = () => {
       }
   }).then(res => {
     alert('Upload completato!')
+  }).catch(err => {
+    alert('Upload fallito: errore: ' + err.message)
   })
 }
 

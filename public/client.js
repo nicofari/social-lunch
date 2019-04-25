@@ -115,10 +115,10 @@ const getList = () => {
     let container = document.getElementById('result_table')
     container.innerHTML = ""
     let trh = getTableRow()
-    let tdh1 = getTableCell()
+    let tdh1 = getTableHeaderCell()
     tdh1.appendChild(createTextCell('Nome'))
     trh.appendChild(tdh1)
-    let tdh2 = getTableCell()
+    let tdh2 = getTableHeaderCell()
     tdh2.appendChild(createTextCell('Piatto scelto'))
     trh.appendChild(tdh2)
     container.appendChild(trh)
@@ -148,6 +148,10 @@ const getTableRow = () => {
 
 const getTableCell = () => {
   return createElement('td')
+}
+
+const getTableHeaderCell = () => {
+  return createElement('th')
 }
 
 const createElement = (elem) => {

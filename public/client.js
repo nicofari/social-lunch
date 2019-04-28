@@ -25,16 +25,24 @@ const getToday = () => {
 }
 
 const uploadMenu = () => {
-  var formData = new FormData();
-  var imagefile = document.querySelector('#menu_file');
-  formData.append("image", imagefile.files[0]);
+  var formData = new FormData()
+  var imagefile = document.querySelector('#menu_file')
+  const image = imagefile.files[0]
+  if (!image) {
+    alert('Nessun file selezionato!')
+    return
+  }
+  formData.append("image", image)
+  showCover()
   axios.post('upload_menu', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
   }).then(res => {
+	hideCover()
     alert('Upload completato!')
   }).catch(err => {
+	hideCover()
     alert('Upload fallito: errore: ' + err.message)
   })
 }
@@ -67,11 +75,13 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.username = name
     }
 
+	showCover()
     axios.post('/form', {
       name: name,
       date: date,
       course: course
     }).then(function (res) {
+	  hideCover()
       const errorMsg = res.data.errorMsg
       if (errorMsg) {
         alert(errorMsg)
@@ -96,6 +106,18 @@ const setDownloadLink = () => {
   })
 }
 
+const showCover = () => {
+	getCover().style.display = 'block'
+}
+
+const hideCover = () => {
+	getCover().style.display = 'none'
+}
+
+const getCover = () => {
+  return getElement('cover')
+}
+
 const getElement = (id) => {
   return document.getElementById(id)
 }
@@ -105,12 +127,14 @@ const getRememberMe = () => {
 }
 
 const getList = () => {
+  showCover()
   const date = getDate().value
   axios.get('/list', {
     params: {
       date: date
     }
   }).then(function (res) {
+	hideCover()
     const len = res.data.length
     let container = document.getElementById('result_table')
     container.innerHTML = ""
@@ -165,11 +189,12 @@ const createTextCell = (text) => {
 const deleteMe = () => {
   const name = getName().value
   const date = getDate().value
-
+  showCover()
   axios.post('/deleteme', {
     name: name,
     date: date
   }).then(function (res) {
+	hideCover()
     const errorMsg = res.data.errorMsg
     if (errorMsg) {
       alert(errorMsg)

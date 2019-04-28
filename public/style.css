@@ -55,6 +55,17 @@ form {
   border-radius: 3px;
 }
 
+#cover {
+  background: url("/assets/images/arena-loading.gif") no-repeat scroll center center rgba(255, 255, 255, 0.5);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  margin-bottom: 25px;
+  max-width: 340px;
+}
+
 input:not([type=checkbox]) {
   display: block;
   margin-bottom: 10px;

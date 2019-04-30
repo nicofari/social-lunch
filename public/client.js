@@ -29,21 +29,21 @@ const uploadMenu = () => {
   var imagefile = document.querySelector('#menu_file')
   const image = imagefile.files[0]
   if (!image) {
-    alert('Nessun file selezionato!')
+    errorDialog('Nessun file selezionato!')
     return
   }
   formData.append("image", image)
   showCover()
   axios.post('upload_menu', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   }).then(res => {
-	hideCover()
-    alert('Upload completato!')
+    hideCover()
+    successDialog('Invio completato', 'File salvato!')
   }).catch(err => {
-	hideCover()
-    alert('Upload fallito: errore: ' + err.message)
+    hideCover()
+    errorDialog('Upload fallito: errore: ' + err.message)
   })
 }
 
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.username) {
     getName().value = localStorage.username
   }
-  
+
   setDownloadLink()
 
   document.querySelector('#name_form').addEventListener('submit', (event) => {
@@ -68,32 +68,43 @@ document.addEventListener("DOMContentLoaded", () => {
     const rememberMe = getRememberMe().value
 
     if (!name) {
-      alert('Il nome è obbligatorio!');
+      errorDialog('Il nome è obbligatorio!');
       return;
     }
     if (rememberMe) {
       localStorage.username = name
     }
 
-	showCover()
+    showCover()
     axios.post('/form', {
       name: name,
       date: date,
       course: course
     }).then(function (res) {
-	  hideCover()
+      hideCover()
       const errorMsg = res.data.errorMsg
       if (errorMsg) {
-        alert(errorMsg)
+        errorDialog(errorMsg)
       } else {
-        alert('Felice di vederti ' + name + '!')
+        successDialog('Felice di vederti ' + name + '!', 'Sei in lista!')
       }
     })
   })
 })
 
+const successDialog = (mainMsg, smallMsg) => {
+  Swal.fire(mainMsg, smallMsg, 'success')
+}
+
+const errorDialog = (msg) => {
+  Swal.fire({
+    type: 'error',
+    title: 'Oops...',
+    text: msg
+  })
+}
 const setDownloadLink = () => {
-  axios.get('/download_info').then( res => {
+  axios.get('/download_info').then(res => {
     const data = res.data
     let downloadEl = getElement('download_menu')
     let a = document.createElement('a')
@@ -107,11 +118,11 @@ const setDownloadLink = () => {
 }
 
 const showCover = () => {
-	getCover().style.display = 'block'
+  getCover().style.display = 'block'
 }
 
 const hideCover = () => {
-	getCover().style.display = 'none'
+  getCover().style.display = 'none'
 }
 
 const getCover = () => {
@@ -134,7 +145,7 @@ const getList = () => {
       date: date
     }
   }).then(function (res) {
-	hideCover()
+    hideCover()
     const len = res.data.length
     let container = document.getElementById('result_table')
     container.innerHTML = ""
@@ -194,12 +205,12 @@ const deleteMe = () => {
     name: name,
     date: date
   }).then(function (res) {
-	hideCover()
+    hideCover()
     const errorMsg = res.data.errorMsg
     if (errorMsg) {
-      alert(errorMsg)
+      errorDialog(errorMsg)
     } else {
-      alert('Ci mancherai ' + name + '!')
+      successDialog('Ci mancherai ' + name + '!', 'Non sei più in lista')
     }
   })
 
